@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ce390b4e5de38f4ebcdc8066ce0d8ff, type: 3}
+  m_Name: _GameConfig
+  m_EditorClassIdentifier: 
+  mouse1prefab: {fileID: 2376768575185514877, guid: a72ac71de25ae6a43b3b23f485e7776f,
+    type: 3}
+  mouse2prefab: {fileID: 2376768575185514877, guid: a72ac71de25ae6a43b3b23f485e7776f,
+    type: 3}
+  mouse1count: 10
+  mouse2count: 10
