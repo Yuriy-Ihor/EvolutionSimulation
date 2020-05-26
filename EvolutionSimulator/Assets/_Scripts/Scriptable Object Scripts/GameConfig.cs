@@ -10,4 +10,7 @@ public class GameConfig : ScriptableObject
 
     public int mouse1count = 10;
     public int mouse2count = 10;
+
+    public int foodCount = 10;
+    public Food foodPrefab;
 }
