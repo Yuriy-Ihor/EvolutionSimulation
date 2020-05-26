@@ -27,7 +27,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
             
             if(eatenFoods == gameConfig.foodCount)
             {
-                OnFoodEaten.Invoke();
+                //OnFoodEaten.Invoke();
             }
         }
     }
@@ -39,7 +39,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
         SpawnMouses(gameConfig.mouse1prefab, gameConfig.mouse1count, mouse1spawnPoses);
         SpawnMouses(gameConfig.mouse2prefab, gameConfig.mouse2count, mouse2spawnPoses);
         StartTurn();
-        OnFoodEaten += StartTurn;
+        //OnFoodEaten += StartTurn;
     }
 
     void StartTurn()
@@ -62,7 +62,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
         for(int i = 0; i < gameConfig.foodCount; i++)
         {
             Vector2 spawnPosition = UnityEngine.Random.insideUnitCircle * 5;
-            Food newFood = Instantiate(gameConfig.foodPrefab, new Vector3(spawnPosition.x, 0, spawnPosition.y), Quaternion.identity);
+            Food newFood = Instantiate(gameConfig.foodPrefab, new Vector3(spawnPosition.x, 1.5f, spawnPosition.y), Quaternion.identity);
             newFood.transform.parent = foodRoot.transform;
             foods.Add(newFood);
         }

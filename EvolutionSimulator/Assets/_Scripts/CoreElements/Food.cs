@@ -15,6 +15,7 @@ public class Food : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("Colliding with " + collision.gameObject.name);
         OnIsEaten();
     }
 

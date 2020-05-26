@@ -66,5 +66,16 @@ public class Mouse : MonoBehaviour
         navmeshAgent.SetDestination(targetFood.transform.position);
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Food")
+        {
+            Food food = collision.gameObject.GetComponent<Food>();
 
+            if(!food.isEaten)
+            {
+                foodGathered++;
+            }
+        }
+    }
 }
