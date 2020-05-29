@@ -8,16 +8,21 @@ using UnityEngine.UI;
 public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
 {
     public GameConfig gameConfig;
-    public int currentTurn = 0;
 
     public List<GameObject> mouse1spawnPoses;
     public List<GameObject> mouse2spawnPoses;
-    public GameObject mouseRoot;
+
     public List<Mouse> mouses1;
     public List<Mouse> mouses2;
+    public GameObject mousesRoot;
 
     public List<Food> foods = new List<Food>();
     public GameObject foodRoot;
+
+    [Header("Turn info")]
+    public int currentTurn = 0;
+    public int foodSpawnRadius = 10;
+    int _eatenFoods;
     public int eatenFoods
     {
         get
@@ -31,23 +36,19 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
             if(_eatenFoods == gameConfig.foodCount)
             {
                 allFoodIsEaten = true;
-                //OnFoodEaten.Invoke();
             }
         }
     }
-    int _eatenFoods;
     public bool allFoodIsEaten;
+    public bool turnStarted = false;
 
     public Button newTurnButton;
-    public bool turnStarted = false;
-    
+
     void Start()
     {
-        mouses1 = CreateMousesList(gameConfig.mouse1prefab, gameConfig.mouse1count, mouse1spawnPoses);
-        mouses2 = CreateMousesList(gameConfig.mouse2prefab, gameConfig.mouse2count, mouse2spawnPoses);
+        mouses1 = CreateMousesList(gameConfig.mouse1prefab, gameConfig.mouse1count, mouse1spawnPoses, 1);
+        mouses2 = CreateMousesList(gameConfig.mouse2prefab, gameConfig.mouse2count, mouse2spawnPoses, 2);
         newTurnButton.onClick.AddListener(StartTurn);
-
-        //OnFoodEaten += StartTurn;
     }
 
     void StartTurn()
@@ -62,13 +63,17 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
         currentTurn++;
         allFoodIsEaten = false;
 
-        foreach(Food food in foods)
+        DestroyFoods();
+        SpawnFood();
+    }
+
+    void DestroyFoods()
+    {
+        foreach (Food food in foods)
         {
             Destroy(food.gameObject);
         }
-
         foods.Clear();
-        SpawnFood();
     }
 
     bool AreMousesOnSpawn()
@@ -91,14 +96,15 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
         return true;
     }
 
-    List<Mouse> CreateMousesList(Mouse mousePrefab, int count, List<GameObject> spawnPoses)
+    List<Mouse> CreateMousesList(Mouse mousePrefab, int count, List<GameObject> spawnPoses, int teamId = 0)
     {
         List<Mouse> mouses = new List<Mouse>();
         for(int i = 0; i < count; i++)
         {
             Vector3 spawnPosition = spawnPoses[i].transform.position;
             var newMouse = Instantiate(mousePrefab, spawnPosition, Quaternion.identity);  
-            newMouse.transform.parent = mouseRoot.transform;
+            newMouse.transform.parent = mousesRoot.transform;
+            newMouse.teamId = teamId;
             mouses.Add(newMouse);
         }
         return mouses;
@@ -108,13 +114,10 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
     {
         for(int i = 0; i < gameConfig.foodCount; i++)
         {
-            Vector2 spawnPosition = UnityEngine.Random.insideUnitCircle * 5;
+            Vector2 spawnPosition = UnityEngine.Random.insideUnitCircle * foodSpawnRadius;
             Food newFood = Instantiate(gameConfig.foodPrefab, new Vector3(spawnPosition.x, 0, spawnPosition.y), Quaternion.identity);
             newFood.transform.parent = foodRoot.transform;
             foods.Add(newFood);
         }
     }
-
-    public delegate void OnFoodEatenDelegate();
-    public OnFoodEatenDelegate OnFoodEaten;
 }

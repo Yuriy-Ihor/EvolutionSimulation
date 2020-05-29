@@ -11,6 +11,7 @@ public class Mouse : MonoBehaviour
     public EvolutionProccessManager evolutionProccessManager;
     public Vector3 spawnPoint;
     public int foodGathered = 0;
+    public int teamId;
 
     public bool isStayingOnSpawn
     { 

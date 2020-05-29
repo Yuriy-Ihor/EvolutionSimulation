@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce390b4e5de38f4ebcdc8066ce0d8ff, type: 3}
   m_Name: _GameConfig
   m_EditorClassIdentifier: 
-  mouse1prefab: {fileID: 2376768575185514877, guid: a72ac71de25ae6a43b3b23f485e7776f,
+  mouse1prefab: {fileID: 2376768575185514877, guid: da6c7b23e259462449fb410a036fdb08,
     type: 3}
   mouse2prefab: {fileID: 2376768575185514877, guid: a72ac71de25ae6a43b3b23f485e7776f,
     type: 3}
-  mouse1count: 1
-  mouse2count: 1
-  foodCount: 15
+  mouse1count: 5
+  mouse2count: 5
+  foodCount: 10
   foodPrefab: {fileID: 3681153800100704579, guid: aa84d48e603ea8846a0678124dec9277,
     type: 3}
