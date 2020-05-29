@@ -12,6 +12,15 @@ public class Mouse : MonoBehaviour
     public Vector3 spawnPoint;
     public int foodGathered = 0;
 
+    public bool isStayingOnSpawn
+    { 
+        get
+        {
+            return (transform.position - spawnPoint).magnitude < 1;
+        }
+    }
+
+
     void Start()
     {
         spawnPoint = transform.position;
@@ -27,7 +36,8 @@ public class Mouse : MonoBehaviour
         }
 
         targetFood = GetClosestFood();
-        if (targetFood == null)
+
+        if (targetFood == null || evolutionProccessManager.allFoodIsEaten)
         {
             ReturnToTheSpawn();
         }

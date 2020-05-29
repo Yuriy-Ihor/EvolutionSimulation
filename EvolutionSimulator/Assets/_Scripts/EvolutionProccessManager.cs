@@ -30,8 +30,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
             
             if(_eatenFoods == gameConfig.foodCount)
             {
-                turnStarted = false;
-                Debug.Log("Turn finished");
+                allFoodIsEaten = true;
                 //OnFoodEaten.Invoke();
             }
         }
@@ -44,8 +43,8 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
     
     void Start()
     {
-        SpawnMouses(gameConfig.mouse1prefab, gameConfig.mouse1count, mouse1spawnPoses);
-        SpawnMouses(gameConfig.mouse2prefab, gameConfig.mouse2count, mouse2spawnPoses);
+        mouses1 = CreateMousesList(gameConfig.mouse1prefab, gameConfig.mouse1count, mouse1spawnPoses);
+        mouses2 = CreateMousesList(gameConfig.mouse2prefab, gameConfig.mouse2count, mouse2spawnPoses);
         newTurnButton.onClick.AddListener(StartTurn);
 
         //OnFoodEaten += StartTurn;
@@ -53,6 +52,12 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
 
     void StartTurn()
     {
+        if(!AreMousesOnSpawn())
+        {
+            Debug.Log("Mouses are not on spawn! Please wait");
+            return;
+        }
+
         turnStarted = true;
         currentTurn++;
         allFoodIsEaten = false;
@@ -61,23 +66,42 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
         {
             Destroy(food.gameObject);
         }
+
         foods.Clear();
         SpawnFood();
     }
 
-    void ReturnMousesToStartPositions()
+    bool AreMousesOnSpawn()
     {
-        
+        foreach(Mouse mouse in mouses1)
+        {
+            if(!mouse.isStayingOnSpawn)
+            {
+                return false;
+            }
+        }
+        foreach (Mouse mouse in mouses2)
+        {
+            if (!mouse.isStayingOnSpawn)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    void SpawnMouses(Mouse mousePrefab, int count, List<GameObject> spawnPoses)
+    List<Mouse> CreateMousesList(Mouse mousePrefab, int count, List<GameObject> spawnPoses)
     {
+        List<Mouse> mouses = new List<Mouse>();
         for(int i = 0; i < count; i++)
         {
             Vector3 spawnPosition = spawnPoses[i].transform.position;
             var newMouse = Instantiate(mousePrefab, spawnPosition, Quaternion.identity);  
             newMouse.transform.parent = mouseRoot.transform;
+            mouses.Add(newMouse);
         }
+        return mouses;
     }
 
     void SpawnFood()
