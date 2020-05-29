@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Food
+  - Mouse
   layers:
   - Default
   - TransparentFX

@@ -65,7 +65,6 @@ public class CameraMovementScript : MonoBehaviour
     {
         if(Input.GetMouseButton(0))
         {
-            Debug.Log("rotating");
             blockMovement = true;
             Vector3 rotation = transform.eulerAngles;
     

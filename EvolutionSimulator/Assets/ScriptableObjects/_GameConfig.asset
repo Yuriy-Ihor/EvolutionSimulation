@@ -18,6 +18,6 @@ MonoBehaviour:
     type: 3}
   mouse1count: 1
   mouse2count: 1
-  foodCount: 10
+  foodCount: 15
   foodPrefab: {fileID: 3681153800100704579, guid: aa84d48e603ea8846a0678124dec9277,
     type: 3}

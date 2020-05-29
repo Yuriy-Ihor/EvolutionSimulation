@@ -13,10 +13,13 @@ public class Food : MonoBehaviour
         evolutionProccessManager = EvolutionProccessManager.GetInstance;
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Colliding with " + collision.gameObject.name);
-        OnIsEaten();
+        if(other.gameObject.CompareTag("Mouse"))
+        {
+            Debug.Log(gameObject.name + " is eaten by " + gameObject.name);
+            OnIsEaten();
+        }
     }
 
     private void OnIsEaten()
