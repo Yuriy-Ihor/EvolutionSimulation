@@ -40,11 +40,11 @@ public class Mouse : MonoBehaviour
 
         if (targetFood == null || evolutionProccessManager.allFoodIsEaten)
         {
-            ReturnToTheSpawn();
+            navmeshAgent.SetDestination(spawnPoint);
         }
         else
         {
-            GoToTheTargetFood();
+            navmeshAgent.SetDestination(targetFood.transform.position);
         }
     }
 
@@ -52,6 +52,11 @@ public class Mouse : MonoBehaviour
     {
         Food closestFood = null;
         float distanceToClosest = 10000;
+
+        if(evolutionProccessManager.foods.Count == 0)
+        {
+            return null;
+        }
 
         for (int i = 0; i < evolutionProccessManager.gameConfig.foodCount; i++)
         {
@@ -71,16 +76,6 @@ public class Mouse : MonoBehaviour
         }
 
         return closestFood;
-    }
-
-    void ReturnToTheSpawn()
-    {
-        navmeshAgent.SetDestination(spawnPoint);
-    }
-
-    void GoToTheTargetFood()
-    {
-        navmeshAgent.SetDestination(targetFood.transform.position);
     }
 
     private void OnTriggerEnter(Collider other)

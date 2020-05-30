@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using UnityEditor;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
 {
@@ -39,22 +40,54 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
             }
         }
     }
+    public bool autoTurn { get { return autoNewTurn.isOn; } }
     public bool allFoodIsEaten;
     public bool turnStarted = false;
 
+    public Toggle autoNewTurn;
     public Button newTurnButton;
     public InputField timeScaleInput;
+
     void Start()
     {
         mouses1 = CreateMousesList(gameConfig.mouse1prefab, gameConfig.mouse1count, mouse1spawnPoses, 1);
         mouses2 = CreateMousesList(gameConfig.mouse2prefab, gameConfig.mouse2count, mouse2spawnPoses, 2);
+
+        OnEndTurn += CheckMousesGatheredFood;
+        OnEndTurn += EndTurn;
+
+        timeScaleInput.text = "1";
+
         newTurnButton.onClick.AddListener(StartTurn);
         timeScaleInput.onValueChanged.AddListener(delegate {Time.timeScale = int.Parse(timeScaleInput.text); });
     }
 
+    private void Update()
+    {
+        if(turnStarted)
+        {
+            if(allFoodIsEaten && AreMousesOnSpawn)
+            {
+                OnEndTurn.Invoke();
+            }
+        }
+    }
+
+    void EndTurn()
+    {
+        allFoodIsEaten = false;
+        eatenFoods = 0;
+        DestroyFoods();
+
+        if (autoTurn)
+        {
+            StartTurn();
+        }
+    }
+
     void StartTurn()
     {
-        if(!AreMousesOnSpawn())
+        if(!AreMousesOnSpawn)
         {
             Debug.Log("Mouses are not on spawn! Please wait");
             return;
@@ -62,9 +95,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
 
         turnStarted = true;
         currentTurn++;
-        allFoodIsEaten = false;
 
-        DestroyFoods();
         SpawnFood();
     }
 
@@ -74,27 +105,31 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
         {
             Destroy(food.gameObject);
         }
+
         foods.Clear();
     }
 
-    bool AreMousesOnSpawn()
+    public bool AreMousesOnSpawn
     {
-        foreach(Mouse mouse in mouses1)
+        get
         {
-            if(!mouse.isStayingOnSpawn)
+            foreach (Mouse mouse in mouses1)
             {
-                return false;
+                if (!mouse.isStayingOnSpawn)
+                {
+                    return false;
+                }
             }
-        }
-        foreach (Mouse mouse in mouses2)
-        {
-            if (!mouse.isStayingOnSpawn)
+            foreach (Mouse mouse in mouses2)
             {
-                return false;
+                if (!mouse.isStayingOnSpawn)
+                {
+                    return false;
+                }
             }
-        }
 
-        return true;
+            return true;
+        }
     }
 
     List<Mouse> CreateMousesList(Mouse mousePrefab, int count, List<GameObject> spawnPoses, int teamId = 0)
@@ -111,6 +146,11 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
         return mouses;
     }
 
+    void CheckMousesGatheredFood()
+    {
+        Debug.Log("Checking mouses");
+    }
+
     void SpawnFood()
     {
         for(int i = 0; i < gameConfig.foodCount; i++)
@@ -121,4 +161,6 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
             foods.Add(newFood);
         }
     }
+
+    public UnityAction OnEndTurn;
 }
