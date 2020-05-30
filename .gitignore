@@ -2,7 +2,7 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
-/[Ll]ibrary/
+/[Ll]ibrary
 /[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/
@@ -282,3 +282,14 @@ EvolutionSimulator/Temp/UnityTempFile-e5b2b93d0dcfc5a40a2e0ad333d7cc56
 EvolutionSimulator/Temp/UnityTempFile-e83d7f621dcce0f4da22068c02e77660
 EvolutionSimulator/Temp/UnityTempFile-f47a8f10aa3d0414e86148d15b36220d
 EvolutionSimulator/Temp/UnityTempFile-fe066cdb04726a54fa2eaeb3213c92f2
+EvolutionSimulator/Library/Artifacts/01/012d0cded8ea0b26c599fbcfd2cf7101
+EvolutionSimulator/Library/Artifacts/29/290f1eae10d0c52723ef2ec39652a4f4
+EvolutionSimulator/Library/Artifacts/33/33e46459c0414251b7e2793eef78cd33
+EvolutionSimulator/Library/Artifacts/52/523e2e45efd7c9e5ebad70119f0695a9
+EvolutionSimulator/Library/Artifacts/52/524f61bf322ee4ebb65bbc105ccff2fc
+EvolutionSimulator/Library/Artifacts/80/80b423806541bd69f499ad7f87ff3d5b
+EvolutionSimulator/Library/Artifacts/81/8172d810741d8f3764c6911aaf5402ff
+EvolutionSimulator/Library/Artifacts/ac/ace0aa3b9bd312e481a28a4e8ef496c8
+EvolutionSimulator/Library/Artifacts/ca/ca3da9c58f6b11d4e4539ca4c0a4ff72
+EvolutionSimulator/Library/Artifacts/d8/d81d70c197567f674c71e12a6cf497bc
+EvolutionSimulator/Library/Artifacts/ff/ff775e54f0349e4fbcaed1701c1abd43

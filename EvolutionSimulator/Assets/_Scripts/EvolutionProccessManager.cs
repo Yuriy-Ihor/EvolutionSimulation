@@ -24,24 +24,14 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
     [Header("Turn info")]
     public int currentTurn = 0;
     public int foodSpawnRadius = 10;
-    int _eatenFoods;
-    public int eatenFoods
-    {
+    public bool allFoodIsEaten
+    { 
         get
         {
-            return _eatenFoods;
-        }
-        set
-        {
-            _eatenFoods = value;
-            
-            if(_eatenFoods == gameConfig.foodCount)
-            {
-                allFoodIsEaten = true;
-            }
+            return foods.Count == 0;
         }
     }
-    public bool allFoodIsEaten;
+
     public bool turnStarted = false;
 
     [Header("UI elements")]
@@ -77,8 +67,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
 
     void EndTurn()
     {
-        allFoodIsEaten = false;
-        eatenFoods = 0;
+        turnStarted = false;
         DestroyFoods();
 
         if (autoTurn)
@@ -144,6 +133,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
             var newMouse = Instantiate(mousePrefab, spawnPosition, Quaternion.identity);  
             newMouse.transform.parent = mousesRoot.transform;
             newMouse.teamId = teamId;
+            newMouse.gameObject.name = "Mouse " + teamId + ":" + i;
             mouses.Add(newMouse);
         }
         return mouses;
@@ -163,8 +153,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
             {
                 case 0:
                 case 1:
-                    mouses.Remove(mouse);
-                    Destroy(mouse.gameObject);
+                    Debug.Log("Kill " + mouse.gameObject.name);
                     break;
                 case 2:
                     break;

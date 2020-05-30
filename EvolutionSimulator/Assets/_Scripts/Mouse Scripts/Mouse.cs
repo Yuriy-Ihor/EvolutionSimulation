@@ -57,7 +57,7 @@ public class Mouse : MonoBehaviour
             return null;
         }
 
-        for (int i = 0; i < evolutionProccessManager.gameConfig.foodCount; i++)
+        for (int i = 0; i < evolutionProccessManager.foods.Count; i++)
         {
             Food currentFood = evolutionProccessManager.foods[i];
             if (currentFood.isEaten)

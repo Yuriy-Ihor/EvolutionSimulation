@@ -24,7 +24,7 @@ public class Food : MonoBehaviour
     private void OnIsEaten()
     {
         isEaten = true;
-        evolutionProccessManager.eatenFoods++;
-        GetComponent<MeshRenderer>().material.color = Color.red;
+        evolutionProccessManager.foods.Remove(this);
+        Destroy(gameObject);
     }
 }
