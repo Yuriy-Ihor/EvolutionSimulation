@@ -5,47 +5,42 @@ using UnityEngine;
 
 public class CameraMovementScript : MonoBehaviour
 {
-    private Camera camera;
-
-    public bool blockMovement = false;
+    Camera camera;
+    bool blockMovement = false;
+    public KeyCode speedKey = KeyCode.LeftShift;
 
     [Header("Movement speed")]
     public float normalMovementSpeed = 2;
     public float maxMovementSpeed = 10;
-    private float currentMovementSpeed = 2;
+    float _currentMovementSpeed
+    {
+        get
+        {
+            return Input.GetKey(speedKey) ? maxMovementSpeed : normalMovementSpeed;
+        }
+    }
 
     [Header("Rotation speeds")]
     public float normalRotationSpeed = 10;
     public float maxRotationSpeed = 40;
-    private float currentRotationSpeed = 10;
-    
-    public KeyCode speedKey = KeyCode.LeftShift;
+    float _currentRotationSpeed
+    {
+        get
+        {
+            return Input.GetKey(speedKey) ? maxRotationSpeed : normalRotationSpeed;
+        }
+    }
 
+    
     void Start()
     {
         camera = GetComponent<Camera>();
     }
 
-
     void Update()
     {
-        CheckSpeedKey();
         ControlMovement();
         ControlRotation();
-    }
-
-    void CheckSpeedKey()
-    {
-        if(Input.GetKey(speedKey))
-        {
-            currentMovementSpeed = maxMovementSpeed;
-            currentRotationSpeed = maxRotationSpeed;
-        }
-        else
-        {
-            currentMovementSpeed = normalMovementSpeed;
-            currentRotationSpeed = normalRotationSpeed;
-        }
     }
 
     void ControlMovement()
@@ -60,7 +55,7 @@ public class CameraMovementScript : MonoBehaviour
             Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
             Vector3 rotation = transform.rotation.eulerAngles;
             direction = Quaternion.Euler(rotation.x, rotation.y, rotation.z) * direction;
-            transform.position += currentMovementSpeed * direction;
+            transform.position += _currentMovementSpeed * direction;
         }
     }
 
@@ -71,8 +66,8 @@ public class CameraMovementScript : MonoBehaviour
             blockMovement = true;
             Vector3 rotation = transform.eulerAngles;
     
-            rotation.x += Input.GetAxis("Vertical") * currentRotationSpeed * Time.deltaTime;
-            rotation.y += Input.GetAxis("Horizontal") * currentRotationSpeed * Time.deltaTime; // Standart Left-/Right Arrows and A & D Keys
+            rotation.x += Input.GetAxis("Vertical") * _currentRotationSpeed * Time.deltaTime;
+            rotation.y += Input.GetAxis("Horizontal") * _currentRotationSpeed * Time.deltaTime; // Standart Left-/Right Arrows and A & D Keys
  
             transform.eulerAngles = rotation;
         }

@@ -9,6 +9,7 @@ using UnityEngine.Events;
 public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
 {
     public GameConfig gameConfig;
+    public bool autoTurn { get { return autoNewTurn.isOn; } }
 
     public List<GameObject> mouse1spawnPoses;
     public List<GameObject> mouse2spawnPoses;
@@ -40,10 +41,11 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
             }
         }
     }
-    public bool autoTurn { get { return autoNewTurn.isOn; } }
     public bool allFoodIsEaten;
     public bool turnStarted = false;
 
+    [Header("UI elements")]
+    public Text currentTurnText;
     public Toggle autoNewTurn;
     public Button newTurnButton;
     public InputField timeScaleInput;
@@ -53,7 +55,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
         mouses1 = CreateMousesList(gameConfig.mouse1prefab, gameConfig.mouse1count, mouse1spawnPoses, 1);
         mouses2 = CreateMousesList(gameConfig.mouse2prefab, gameConfig.mouse2count, mouse2spawnPoses, 2);
 
-        OnEndTurn += CheckMousesGatheredFood;
+        OnEndTurn += CheckAllMousesGatheredFood;
         OnEndTurn += EndTurn;
 
         timeScaleInput.text = "1";
@@ -97,6 +99,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
         currentTurn++;
 
         SpawnFood();
+        currentTurnText.text = currentTurn.ToString();
     }
 
     void DestroyFoods()
@@ -146,9 +149,30 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
         return mouses;
     }
 
-    void CheckMousesGatheredFood()
+    void CheckAllMousesGatheredFood()
     {
-        Debug.Log("Checking mouses");
+        CheckMousesGatheredFood(mouses1);
+        CheckMousesGatheredFood(mouses2);
+    }
+
+    void CheckMousesGatheredFood(List<Mouse> mouses)
+    {
+        foreach (Mouse mouse in mouses)
+        {
+            switch (mouse.foodGathered)
+            {
+                case 0:
+                case 1:
+                    mouses.Remove(mouse);
+                    Destroy(mouse.gameObject);
+                    break;
+                case 2:
+                    break;
+                default:
+                    mouse.Reproduce();
+                    break;
+            }
+        }
     }
 
     void SpawnFood()

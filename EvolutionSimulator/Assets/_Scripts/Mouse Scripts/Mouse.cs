@@ -21,7 +21,6 @@ public class Mouse : MonoBehaviour
         }
     }
 
-
     void Start()
     {
         spawnPoint = transform.position;
@@ -76,6 +75,11 @@ public class Mouse : MonoBehaviour
         }
 
         return closestFood;
+    }
+
+    public void Reproduce()
+    {
+        Debug.Log("Reproducing");
     }
 
     private void OnTriggerEnter(Collider other)
