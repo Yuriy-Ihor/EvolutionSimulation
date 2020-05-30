@@ -57,7 +57,10 @@ public class CameraMovementScript : MonoBehaviour
 
         if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0) 
         {
-            transform.position += currentMovementSpeed * new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+            Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
+            Vector3 rotation = transform.rotation.eulerAngles;
+            direction = Quaternion.Euler(rotation.x, rotation.y, rotation.z) * direction;
+            transform.position += currentMovementSpeed * direction;
         }
     }
 

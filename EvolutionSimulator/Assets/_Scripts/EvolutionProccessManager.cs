@@ -43,12 +43,13 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
     public bool turnStarted = false;
 
     public Button newTurnButton;
-
+    public InputField timeScaleInput;
     void Start()
     {
         mouses1 = CreateMousesList(gameConfig.mouse1prefab, gameConfig.mouse1count, mouse1spawnPoses, 1);
         mouses2 = CreateMousesList(gameConfig.mouse2prefab, gameConfig.mouse2count, mouse2spawnPoses, 2);
         newTurnButton.onClick.AddListener(StartTurn);
+        timeScaleInput.onValueChanged.AddListener(delegate {Time.timeScale = int.Parse(timeScaleInput.text); });
     }
 
     void StartTurn()
