@@ -12,6 +12,8 @@ public class Mouse : MonoBehaviour
     public Vector3 spawnPoint;
     public int foodGathered = 0;
     public int teamId;
+    public List<Mouse> mousesTeammates = new List<Mouse>();
+    public static List<Mouse> allMouses = new List<Mouse>();
 
     public bool isStayingOnSpawn
     { 
@@ -26,6 +28,20 @@ public class Mouse : MonoBehaviour
         spawnPoint = transform.position;
         evolutionProccessManager = EvolutionProccessManager.GetInstance;
         navmeshAgent = GetComponent<NavMeshAgent>();
+        allMouses.Add(this);
+    }
+    
+    public void Init(GameObject mousesRoot, int teamId, ref List<Mouse> mousesTeammates, int nameId)
+    {
+        transform.parent = mousesRoot.transform;
+        this.teamId = teamId;
+        this.mousesTeammates = mousesTeammates;
+        gameObject.name = "Mouse " + teamId + ":" + nameId;
+    }
+
+    public void UpdateTeammateList()
+    {
+        mousesTeammates = allMouses.FindAll(x => x.teamId == this.teamId);
     }
 
     void Update()
@@ -77,14 +93,8 @@ public class Mouse : MonoBehaviour
         return closestFood;
     }
 
-    public void Reproduce()
-    {
-        Debug.Log("Reproducing");
-    }
-
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Colliding");
         if(other.gameObject.CompareTag("Food"))
         {
             Food food = other.gameObject.GetComponent<Food>();
@@ -100,5 +110,11 @@ public class Mouse : MonoBehaviour
                 foodGathered++;
             }
         }
+    }
+
+    public void OnDestroy()
+    {
+        mousesTeammates.Remove(this);
+        allMouses.Remove(this);
     }
 }
