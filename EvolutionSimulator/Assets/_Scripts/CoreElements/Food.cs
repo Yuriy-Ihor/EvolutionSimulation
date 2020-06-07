@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Food : MonoBehaviour
 {
@@ -11,13 +12,14 @@ public class Food : MonoBehaviour
     void Start()
     {
         evolutionProccessManager = EvolutionProccessManager.GetInstance;
+        onIsEatenEvent += OnIsEaten;
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Mouse") && !isEaten)
+        if(other.gameObject.CompareTag("Mouse"))
         {
-            OnIsEaten();
+            onIsEatenEvent();
         }
     }
 
@@ -27,4 +29,6 @@ public class Food : MonoBehaviour
         evolutionProccessManager.foods.Remove(this);
         Destroy(gameObject);
     }
+
+    public UnityAction onIsEatenEvent;
 }

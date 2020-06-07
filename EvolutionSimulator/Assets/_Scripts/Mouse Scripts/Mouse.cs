@@ -12,14 +12,18 @@ public class Mouse : MonoBehaviour
     public Vector3 spawnPoint;
     public int foodGathered = 0;
     public int teamId;
+
+    public float distanceToSpawn;
     public List<Mouse> mousesTeammates = new List<Mouse>();
     public static List<Mouse> allMouses = new List<Mouse>();
 
+    [SerializeField]
+    bool _isStayingOnSpawn;
     public bool isStayingOnSpawn
     { 
         get
         {
-            return (transform.position - spawnPoint).magnitude < 1;
+            return distanceToSpawn < 1;
         }
     }
 
@@ -28,15 +32,14 @@ public class Mouse : MonoBehaviour
         spawnPoint = transform.position;
         evolutionProccessManager = EvolutionProccessManager.GetInstance;
         navmeshAgent = GetComponent<NavMeshAgent>();
-        allMouses.Add(this);
     }
     
-    public void Init(GameObject mousesRoot, int teamId, ref List<Mouse> mousesTeammates, int nameId)
+    public void Init(GameObject mousesRoot, int teamId, int nameId)
     {
         transform.parent = mousesRoot.transform;
         this.teamId = teamId;
-        this.mousesTeammates = mousesTeammates;
         gameObject.name = "Mouse " + teamId + ":" + nameId;
+        allMouses.Add(this);
     }
 
     public void UpdateTeammateList()
@@ -46,7 +49,10 @@ public class Mouse : MonoBehaviour
 
     void Update()
     {
-        if(!evolutionProccessManager.turnStarted)
+        _isStayingOnSpawn = isStayingOnSpawn;
+        distanceToSpawn = (transform.position - spawnPoint).magnitude;
+
+        if (!evolutionProccessManager.turnStarted)
         {
             return;
         }
@@ -66,7 +72,7 @@ public class Mouse : MonoBehaviour
     Food GetClosestFood()
     {
         Food closestFood = null;
-        float distanceToClosest = 10000;
+        float distanceToClosest = Mathf.Infinity;
 
         if(evolutionProccessManager.foods.Count == 0)
         {
@@ -107,6 +113,7 @@ public class Mouse : MonoBehaviour
 
             if(!food.isEaten)
             {
+                Debug.Log(gameObject.name + " has eatten food");
                 foodGathered++;
             }
         }

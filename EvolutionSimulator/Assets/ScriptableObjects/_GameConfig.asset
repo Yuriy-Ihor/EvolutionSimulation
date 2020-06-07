@@ -16,8 +16,8 @@ MonoBehaviour:
     type: 3}
   mouse2prefab: {fileID: 2376768575185514877, guid: a72ac71de25ae6a43b3b23f485e7776f,
     type: 3}
-  mouse1count: 5
-  mouse2count: 5
-  foodCount: 10
+  mouse1count: 6
+  mouse2count: 6
+  foodCount: 18
   foodPrefab: {fileID: 3681153800100704579, guid: aa84d48e603ea8846a0678124dec9277,
     type: 3}

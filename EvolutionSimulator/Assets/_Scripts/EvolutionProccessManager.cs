@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Linq;
@@ -10,25 +11,30 @@ using System.Linq;
 public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
 {
     public GameConfig gameConfig;
-    public bool autoTurn { get { return autoNewTurn.isOn; } }
-
-    public List<GameObject> mouse1spawnPoses;
-    public List<GameObject> mouse2spawnPoses;
-
-    public int team_1_id = 1;
-    public int team_2_id = 2;
-
-    public List<Mouse> mouses1;
-    public List<Mouse> mouses2;
+   
     public GameObject mousesRoot;
+    public GameObject foodRoot;
 
     public List<Food> foods = new List<Food>();
-    public GameObject foodRoot;
+    public bool autoTurn { get { return autoNewTurn.isOn; } }
+
+    [Header("Team 1")]
+    public int team_1_id = 1;
+    public List<GameObject> mouse1spawnPoses;
+    public List<Mouse> mouses1;
+
+    [Header("Team 2")]
+    public int team_2_id = 2;
+    public List<GameObject> mouse2spawnPoses;
+    public List<Mouse> mouses2;
 
     [Header("Turn info")]
     public int currentTurn = 0;
     public int foodSpawnRadius = 10;
     public bool turnStarted = false;
+
+    [SerializeField]
+    bool _allFoodIsEaten;
     public bool allFoodIsEaten
     { 
         get
@@ -41,18 +47,25 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
     public Text currentTurnText;
     public Toggle autoNewTurn;
     public Button newTurnButton;
+    public Button resetButton;
     public InputField timeScaleInput;
 
     void Start()
     {
         mouses1 = CreateMousesList(gameConfig.mouse1prefab, gameConfig.mouse1count, mouse1spawnPoses, team_1_id);
         mouses2 = CreateMousesList(gameConfig.mouse2prefab, gameConfig.mouse2count, mouse2spawnPoses, team_2_id);
+
         UpdateMousesLists();
 
         timeScaleInput.text = "1";
-
         newTurnButton.onClick.AddListener(StartTurn);
+        resetButton.onClick.AddListener(Reset);
         timeScaleInput.onValueChanged.AddListener(delegate {Time.timeScale = int.Parse(timeScaleInput.text); });
+    }
+
+    private void Reset()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     void UpdateMousesLists()
@@ -63,6 +76,8 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
 
     private void Update()
     {
+        _allFoodIsEaten = allFoodIsEaten;
+
         if(turnStarted)
         {
             if(allFoodIsEaten && AreMousesOnSpawn)
@@ -141,7 +156,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
         {
             Vector3 spawnPosition = spawnPoses[i].transform.position;
             Mouse newMouse = Instantiate(mousePrefab, spawnPosition, Quaternion.identity);
-            newMouse.Init(mousesRoot, teamId, ref mouses, i);
+            newMouse.Init(mousesRoot, teamId, i);
         }
         return mouses;
     }
@@ -169,21 +184,22 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
                 case 2:
                     break;
                 default:
-                    ReproduceMouse(mouse);
+                    int reproduceCount = mouse.foodGathered - 2;
+                    mouse.foodGathered = 0;
+                    ReproduceMouse(mouse, reproduceCount);
                     break;
             }
         }
     }
-    public void ReproduceMouse(Mouse toCopy)
+    public void ReproduceMouse(Mouse toCopy, int reproduceCount)
     {
-        for (int i = 0; i < toCopy.foodGathered - 2; i++)
+        for (int i = 0; i < reproduceCount; i++)
         {
             Mouse reproductedMouse = Instantiate(toCopy);
-            Vector3 spawnPosition = new Vector3((UnityEngine.Random.insideUnitCircle * 2).x, 0, (UnityEngine.Random.insideUnitCircle * 2).y) + toCopy.transform.position;
+            Vector3 spawnPosition = new Vector3((UnityEngine.Random.insideUnitCircle * 1).x, 0, (UnityEngine.Random.insideUnitCircle * 1).y) + toCopy.spawnPoint;
             reproductedMouse.transform.position = spawnPosition;
-            reproductedMouse.Init(mousesRoot, toCopy.teamId, ref toCopy.mousesTeammates, i);
+            reproductedMouse.Init(mousesRoot, toCopy.teamId, i);
         }
-        toCopy.foodGathered = 0;
     }
 
     void SpawnFood()

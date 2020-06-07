@@ -155,7 +155,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4416421835248661054}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.80852944, y: 4.8349047, z: 7.2984385}
+  m_LocalPosition: {x: 0.80852944, y: 0, z: 7.2984385}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 7137010879366497818}
@@ -180,6 +180,7 @@ MonoBehaviour:
   spawnPoint: {x: 0, y: 0, z: 0}
   foodGathered: 0
   teamId: 0
+  distanceToSpawn: 0
   mousesTeammates: []
 --- !u!195 &-7340352272915092965
 NavMeshAgent:
@@ -190,7 +191,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 4416421835248661054}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.08
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -202,7 +203,7 @@ NavMeshAgent:
   m_Height: 2
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 3
+  m_ObstacleAvoidanceType: 0
 --- !u!54 &8134172998551845385
 Rigidbody:
   m_ObjectHideFlags: 0
