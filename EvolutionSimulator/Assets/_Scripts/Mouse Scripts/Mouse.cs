@@ -12,7 +12,6 @@ public class Mouse : MonoBehaviour
     public Vector3 spawnPoint;
     public int foodGathered = 0;
     public int teamId;
-
     public float distanceToSpawn;
     public List<Mouse> mousesTeammates = new List<Mouse>();
     public static List<Mouse> allMouses = new List<Mouse>();

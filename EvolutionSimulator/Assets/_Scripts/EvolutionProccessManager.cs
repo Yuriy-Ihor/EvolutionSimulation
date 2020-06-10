@@ -89,8 +89,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
 
     void EndTurn()
     {
-        CheckMousesGatheredFood(ref mouses1);
-        CheckMousesGatheredFood(ref mouses2);
+        CheckMousesGatheredFood();
 
         foreach (Mouse mouse in Mouse.allMouses)
         {
@@ -161,9 +160,9 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
         return mouses;
     }
 
-    void CheckMousesGatheredFood(ref List<Mouse> mouses)
+    void CheckMousesGatheredFood()
     {
-        List<Mouse> newMouses = new List<Mouse>();
+        List<Mouse> mouses = new List<Mouse>(Mouse.allMouses);
 
         for(int i = 0; i < mouses.Count; i++)
         {
@@ -182,10 +181,12 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
                     i--;
                     break;
                 case 2:
+                    mouse.foodGathered = 0;
                     break;
                 default:
                     int reproduceCount = mouse.foodGathered - 2;
                     mouse.foodGathered = 0;
+                    Debug.Log("Mouse " + mouse.gameObject.name + " will reproduce " + reproduceCount);
                     ReproduceMouse(mouse, reproduceCount);
                     break;
             }
