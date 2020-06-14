@@ -155,6 +155,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
             }
             switch (mouse.foodGathered)
             {
+                /*
                 case 0:
                 case 1:
                     mouses.Remove(mouse);
@@ -169,7 +170,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
                     mouse.foodGathered = 0;
                     Debug.Log("Mouse " + mouse.gameObject.name + " will reproduce " + reproduceCount);
                     mouse.ReproduceSelf(reproduceCount);
-                    break;
+                    break;*/
             }
         }
     }

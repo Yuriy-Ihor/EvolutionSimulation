@@ -125,7 +125,6 @@ public class Mouse : MonoBehaviour
             {
                 Debug.Log(gameObject.name + " has eatten food");
                 foodGathered++;
-                food.onIsEatenEvent.Invoke();
             }
         }
     }
