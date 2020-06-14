@@ -98,6 +98,17 @@ public class Mouse : MonoBehaviour
         return closestFood;
     }
 
+    public void ReproduceSelf(int reproduceCount)
+    {
+        for (int i = 0; i < reproduceCount; i++)
+        {
+            Mouse reproductedMouse = Instantiate(this);
+            Vector3 spawnPosition = new Vector3((UnityEngine.Random.insideUnitCircle * 1).x, 0, (UnityEngine.Random.insideUnitCircle * 1).y) + this.spawnPoint;
+            reproductedMouse.transform.position = spawnPosition;
+            reproductedMouse.Init(evolutionProccessManager.mousesRoot, this.teamId, i);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag("Food"))
@@ -114,6 +125,7 @@ public class Mouse : MonoBehaviour
             {
                 Debug.Log(gameObject.name + " has eatten food");
                 foodGathered++;
+                food.onIsEatenEvent.Invoke();
             }
         }
     }

@@ -17,10 +17,7 @@ public class Food : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Mouse"))
-        {
-            onIsEatenEvent();
-        }
+        
     }
 
     private void OnIsEaten()

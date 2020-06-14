@@ -33,13 +33,26 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
     public int foodSpawnRadius = 10;
     public bool turnStarted = false;
 
-    [SerializeField]
-    bool _allFoodIsEaten;
     public bool allFoodIsEaten
     { 
         get
         {
             return foods.Count == 0;
+        }
+    }
+    public bool AreMousesOnSpawn
+    {
+        get
+        {
+            foreach (Mouse mouse in Mouse.allMouses)
+            {
+                if (!mouse.isStayingOnSpawn)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 
@@ -76,8 +89,6 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
 
     private void Update()
     {
-        _allFoodIsEaten = allFoodIsEaten;
-
         if(turnStarted)
         {
             if(allFoodIsEaten && AreMousesOnSpawn)
@@ -90,16 +101,12 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
     void EndTurn()
     {
         CheckMousesGatheredFood();
-
         foreach (Mouse mouse in Mouse.allMouses)
         {
             mouse.UpdateTeammateList();
         }
-
         UpdateMousesLists();
-
         turnStarted = false;
-        DestroyFoods();
 
         if (autoTurn)
         {
@@ -120,32 +127,6 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
 
         SpawnFood();
         currentTurnText.text = currentTurn.ToString();
-    }
-
-    void DestroyFoods()
-    {
-        foreach (Food food in foods)
-        {
-            Destroy(food.gameObject);
-        }
-
-        foods.Clear();
-    }
-
-    public bool AreMousesOnSpawn
-    {
-        get
-        {
-            foreach (Mouse mouse in Mouse.allMouses)
-            {
-                if (!mouse.isStayingOnSpawn)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
     }
 
     List<Mouse> CreateMousesList(Mouse mousePrefab, int count, List<GameObject> spawnPoses, int teamId)
@@ -187,21 +168,12 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
                     int reproduceCount = mouse.foodGathered - 2;
                     mouse.foodGathered = 0;
                     Debug.Log("Mouse " + mouse.gameObject.name + " will reproduce " + reproduceCount);
-                    ReproduceMouse(mouse, reproduceCount);
+                    mouse.ReproduceSelf(reproduceCount);
                     break;
             }
         }
     }
-    public void ReproduceMouse(Mouse toCopy, int reproduceCount)
-    {
-        for (int i = 0; i < reproduceCount; i++)
-        {
-            Mouse reproductedMouse = Instantiate(toCopy);
-            Vector3 spawnPosition = new Vector3((UnityEngine.Random.insideUnitCircle * 1).x, 0, (UnityEngine.Random.insideUnitCircle * 1).y) + toCopy.spawnPoint;
-            reproductedMouse.transform.position = spawnPosition;
-            reproductedMouse.Init(mousesRoot, toCopy.teamId, i);
-        }
-    }
+   
 
     void SpawnFood()
     {
