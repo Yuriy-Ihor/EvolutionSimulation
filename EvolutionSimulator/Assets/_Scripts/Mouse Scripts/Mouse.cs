@@ -13,8 +13,8 @@ public class Mouse : MonoBehaviour
     public int foodGathered = 0;
     public int teamId;
     public float distanceToSpawn;
-    public List<Mouse> mousesTeammates = new List<Mouse>();
     public static List<Mouse> allMouses = new List<Mouse>();
+    public int generation = 0;
 
     [SerializeField]
     bool _isStayingOnSpawn;
@@ -32,22 +32,26 @@ public class Mouse : MonoBehaviour
         evolutionProccessManager = EvolutionProccessManager.GetInstance;
         navmeshAgent = GetComponent<NavMeshAgent>();
     }
-    
-    public void Init(GameObject mousesRoot, int teamId, int nameId)
+
+    public void Init(GameObject mousesRoot, int teamId, int nameId, int generation)
     {
         transform.parent = mousesRoot.transform;
         this.teamId = teamId;
-        gameObject.name = "Mouse " + teamId + ":" + nameId;
+        this.generation = generation;
+        gameObject.name = "Mouse " + this.teamId + ":" + nameId + "; " + this.generation;
+        stop = false;
         allMouses.Add(this);
     }
 
-    public void UpdateTeammateList()
-    {
-        mousesTeammates = allMouses.FindAll(x => x.teamId == this.teamId);
-    }
+    public bool stop;
 
     void Update()
     {
+        if(stop)
+        {
+            return;
+        }
+
         _isStayingOnSpawn = isStayingOnSpawn;
         distanceToSpawn = (transform.position - spawnPoint).magnitude;
 
@@ -98,15 +102,12 @@ public class Mouse : MonoBehaviour
         return closestFood;
     }
 
-    public void ReproduceSelf(int reproduceCount)
+    public void ReproduceSelf(int id = 0)
     {
-        for (int i = 0; i < reproduceCount; i++)
-        {
-            Mouse reproductedMouse = Instantiate(this);
-            Vector3 spawnPosition = new Vector3((UnityEngine.Random.insideUnitCircle * 1).x, 0, (UnityEngine.Random.insideUnitCircle * 1).y) + this.spawnPoint;
-            reproductedMouse.transform.position = spawnPosition;
-            reproductedMouse.Init(evolutionProccessManager.mousesRoot, this.teamId, i);
-        }
+        Mouse reproductedMouse = Instantiate(this);
+        Vector3 spawnPosition = new Vector3((UnityEngine.Random.insideUnitCircle * 1).x, 0, (UnityEngine.Random.insideUnitCircle * 1).y) + this.spawnPoint;
+        reproductedMouse.transform.position = spawnPosition;
+        reproductedMouse.Init(evolutionProccessManager.mousesRoot, this.teamId, id, this.generation + 1);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -121,17 +122,23 @@ public class Mouse : MonoBehaviour
                 return;
             }
 
-            if(!food.isEaten)
+            if (!food.isEaten)
             {
-                Debug.Log(gameObject.name + " has eatten food");
-                foodGathered++;
+                Debug.Log("MOUSE: " + gameObject.name + " has eatten " + food.gameObject.name + "; time = " + Time.time);
+                foodGathered++; 
             }
         }
     }
 
+    /*
+    public void DestroySelf()
+    {
+        allMouses.Remove(this);
+        Destroy(gameObject);
+    }
+
     public void OnDestroy()
     {
-        mousesTeammates.Remove(this);
         allMouses.Remove(this);
-    }
+    }*/
 }
