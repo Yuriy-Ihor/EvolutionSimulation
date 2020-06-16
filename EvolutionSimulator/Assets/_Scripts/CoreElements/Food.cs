@@ -20,6 +20,7 @@ public class Food : MonoBehaviour
         if(other.gameObject.CompareTag("Mouse") && !isEaten)
         {
             Debug.Log("FOOD: " + other.gameObject.name + " has eatten " + gameObject.name + "; time = " + Time.time);
+            other.gameObject.GetComponent<Mouse>().foodGathered++;
             onIsEatenEvent();
         }
     }

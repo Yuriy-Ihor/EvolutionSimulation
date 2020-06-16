@@ -181,7 +181,10 @@ MonoBehaviour:
   foodGathered: 0
   teamId: 0
   distanceToSpawn: 0
+  generation: 0
+  model: {fileID: 1422424647279128677}
   _isStayingOnSpawn: 0
+  stop: 0
 --- !u!195 &-7340352272915092965
 NavMeshAgent:
   m_ObjectHideFlags: 0

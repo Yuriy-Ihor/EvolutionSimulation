@@ -15,6 +15,7 @@ public class Mouse : MonoBehaviour
     public float distanceToSpawn;
     public static List<Mouse> allMouses = new List<Mouse>();
     public int generation = 0;
+    public GameObject model;
 
     [SerializeField]
     bool _isStayingOnSpawn;
@@ -37,8 +38,7 @@ public class Mouse : MonoBehaviour
     {
         transform.parent = mousesRoot.transform;
         this.teamId = teamId;
-        this.generation = generation;
-        gameObject.name = "Mouse " + this.teamId + ":" + nameId + "; " + this.generation;
+        gameObject.name = "Mouse " + this.teamId + ":" + nameId + "; " + generation;
         stop = false;
         allMouses.Add(this);
     }
@@ -104,10 +104,10 @@ public class Mouse : MonoBehaviour
 
     public void ReproduceSelf(int id = 0)
     {
-        Mouse reproductedMouse = Instantiate(this);
         Vector3 spawnPosition = new Vector3((UnityEngine.Random.insideUnitCircle * 1).x, 0, (UnityEngine.Random.insideUnitCircle * 1).y) + this.spawnPoint;
-        reproductedMouse.transform.position = spawnPosition;
-        reproductedMouse.Init(evolutionProccessManager.mousesRoot, this.teamId, id, this.generation + 1);
+        Mouse reproductedMouse = Instantiate(this, spawnPosition, Quaternion.identity);
+        reproductedMouse.Init(evolutionProccessManager.mousesRoot, this.teamId, id, evolutionProccessManager.generation);
+        //reproductedMouse.stop = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -124,21 +124,14 @@ public class Mouse : MonoBehaviour
 
             if (!food.isEaten)
             {
-                Debug.Log("MOUSE: " + gameObject.name + " has eatten " + food.gameObject.name + "; time = " + Time.time);
-                foodGathered++; 
+                //Debug.Log("MOUSE: " + gameObject.name + " has eatten " + food.gameObject.name + "; time = " + Time.time);
+                //foodGathered++; 
             }
         }
-    }
-
-    /*
-    public void DestroySelf()
-    {
-        allMouses.Remove(this);
-        Destroy(gameObject);
     }
 
     public void OnDestroy()
     {
         allMouses.Remove(this);
-    }*/
+    }
 }

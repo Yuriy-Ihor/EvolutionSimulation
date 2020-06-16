@@ -30,7 +30,13 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
     public int currentTurn = 0;
     public int foodSpawnRadius = 10;
     public bool turnStarted = false;
-
+    public int generation
+    {
+        get
+        {
+            return currentTurn;
+        }
+    }
     public bool allFoodIsEaten
     { 
         get
@@ -120,7 +126,7 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
         {
             Vector3 spawnPosition = spawnPoses[i].transform.position;
             Mouse newMouse = Instantiate(mousePrefab, spawnPosition, Quaternion.identity);
-            newMouse.Init(mousesRoot, teamId, i, 0);
+            newMouse.Init(mousesRoot, teamId, i, this.generation);
         }
     }
 
@@ -136,26 +142,20 @@ public class EvolutionProccessManager : UnitySingleton<EvolutionProccessManager>
                 continue;
             }
 
-            switch (mouse.foodGathered)
-            {
-                case 0:
-                case 1:
-                    mouse.stop = true;
-                    break;
-                case 2:
-                    break;
-                default:
-                    int reproduceCount = mouse.foodGathered - 2;
-                    mouse.foodGathered = 0;
-                    Debug.Log("Mouse " + mouse.gameObject.name + " will reproduce " + reproduceCount);
-                    for(int j = 0; j < reproduceCount; j++)
-                    {
-                        mouse.ReproduceSelf(j);
-                    }
-                    break;
-            }
-
+            int foodLeft = mouse.foodGathered - 2;
             mouse.foodGathered = 0;
+
+            if (foodLeft < 0)
+            {
+                Destroy(mouse.gameObject);
+            }
+            else if(foodLeft > 0)
+            {
+                for (int j = 0; j < foodLeft; j++)
+                {
+                    mouse.ReproduceSelf(j);
+                }
+            }
         }
     }
    
